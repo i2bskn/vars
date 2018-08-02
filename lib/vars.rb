@@ -1,3 +1,4 @@
+require "erb"
 require "open3"
 require "yaml"
 
@@ -17,8 +18,8 @@ class Vars < BasicObject
   end
 
   def create_file(template_path, output_path)
-    File.open(output_path, "w") do |f|
-      f.write(ERB.new(File.read(template_path), nil, "-").result(binding))
+    ::File.open(output_path, "w") do |f|
+      f.write(::ERB.new(::File.read(template_path), nil, "-").result(__binding__))
     end
   end
 
