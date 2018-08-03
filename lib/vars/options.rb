@@ -31,7 +31,7 @@ class Vars < BasicObject
     end
 
     def load_source(path)
-      src = YAML.load(ERB.new(raw_source(path), nil, "-").result(binding))
+      src = YAML.safe_load(ERB.new(raw_source(path), nil, "-").result(binding), [], [], true)
       src.fetch("default", {}).merge(src.fetch(name.to_s))
     end
 
