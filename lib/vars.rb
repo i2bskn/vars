@@ -31,7 +31,7 @@ class Vars < BasicObject
       filename = template_file.basename(".erb")
       next unless ([filename.to_s, template_file.basename.to_s] & excludes).empty?
 
-      create_file(
+      resolve_template(
         template_file,
         output_path.join(template_file.dirname.join(filename).relative_path_from(template_path))
       )
