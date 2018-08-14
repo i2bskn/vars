@@ -20,6 +20,9 @@ Layout/IndentationConsistency:
   Enabled: true
   EnforcedStyle: rails
 
+Metrics/MethodLength:
+  Max: 20
+
 Metrics/LineLength:
   Max: 120
 

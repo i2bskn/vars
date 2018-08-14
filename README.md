@@ -1,28 +1,44 @@
 # Vars
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/vars`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+`vars` is provide configuration each environments.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'vars'
+gem "vars"
 ```
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install vars
-
 ## Usage
 
-TODO: Write usage instructions here
+Load configuretion and resolve templates.
+
+```ruby
+vars = Vars.new(path: "path/to/environment.yml", name: "production")
+vars.rails_env # => "production"
+vars.app_root  # => "/var/www/app/current"
+
+vars.resolve_template("path/to/template.erb", "path/to/dest_file") # Create file from template.
+vars.resolve_templates("config/deploy/templates", "config")
+```
+
+Example configuration file.
+
+```yaml
+default:
+  rails_env: development
+  app_root: /var/www/app/current
+  db_host: localhost
+
+production:
+  rails_env: production
+  db_host: app-db-01.cluster.ap-northeast-1.rds.amazonaws.com
+```
 
 ## Development
 

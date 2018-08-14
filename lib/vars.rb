@@ -1,4 +1,5 @@
 require "erb"
+require "forwardable"
 require "open3"
 require "pathname"
 require "yaml"
@@ -7,15 +8,17 @@ require "vars/options"
 require "vars/version"
 
 class Vars < BasicObject
-  attr_reader :path, :options
+  extend ::Forwardable
 
-  def initialize(path, opts = {})
-    @path    = path
-    @options = Options.new(opts)
+  attr_reader :options
+  def_delegators :options, :hash
+
+  def initialize(opts = {})
+    @options = opts.is_a?(Options) ? opts : Options.new(opts)
   end
 
   def [](key)
-    hash.fetch(key.to_s, nil)
+    hash[key.to_s]
   end
 
   def resolve_templates(template_path, output_path, excludes: [])
@@ -30,26 +33,21 @@ class Vars < BasicObject
 
       create_file(
         template_file,
-        output_path.join(template_file.dirname.join(filename).relative_path_from(template_path)),
+        output_path.join(template_file.dirname.join(filename).relative_path_from(template_path))
       )
     end
   end
 
-  def create_file(template_file, output_file)
+  def resolve_template(template_file, output_file)
     ::File.open(output_file, "w") do |f|
       f.write(::ERB.new(::File.read(template_file), nil, "-").result(__binding__))
     end
-  end
-
-  def hash
-    @hash ||= options.load_source(path)
   end
 
   private
 
     def method_missing(name, *args, &block)
       super unless hash.key?(name.to_s)
-
       hash.fetch(name.to_s)
     end
 
