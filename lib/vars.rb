@@ -7,7 +7,7 @@ require "yaml"
 require "vars/options"
 require "vars/version"
 
-class Vars < BasicObject
+class Vars
   extend ::Forwardable
 
   attr_reader :options

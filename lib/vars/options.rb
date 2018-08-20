@@ -1,4 +1,4 @@
-class Vars < BasicObject
+class Vars
   class Options
     attr_reader :opts
 
@@ -24,7 +24,7 @@ class Vars < BasicObject
     end
 
     def load_source
-      src = YAML.safe_load(ERB.new(raw_source, nil, "-").result(BasicObject.new.__binding__), [], [], true)
+      src = YAML.safe_load(ERB.new(raw_source, nil, "-").result(Class.new.__binding__), [], [], true)
       src.fetch("default", {}).merge(src.fetch(name.to_s))
     end
 
