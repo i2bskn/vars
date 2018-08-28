@@ -39,23 +39,18 @@ class Vars
     end
 
     def repo_path
-      case
-      when opts.key?(:repo_path)
-        opts.fetch(:repo_path)
-      when in_repository?
-        opts[:repo_path] = capture("git rev-parse --show-toplevel")
-      else
-        nil
-      end
+      return opts.fetch(:repo_path) if opts.key?(:repo_path)
+      return nil unless in_repository?
+
+      opts[:repo_path] = capture("git rev-parse --show-toplevel")
     end
 
     def branch
-      case
-      when opts.key?(:branch)
-        opts.fetch(:branch)
-      when ENV.key?(EnvKeys::BRANCH)
+      return opts.fetch(:branch) if opts.key?(:branch)
+
+      if ENV.key?(EnvKeys::BRANCH)
         opts[:branch] = ENV.fetch(EnvKeys::BRANCH)
-      when in_repository?
+      elsif in_repository?
         opts[:branch] = capture("git symbolic-ref --short HEAD")
       else
         Defaults::BRANCH
