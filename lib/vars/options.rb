@@ -5,13 +5,15 @@ class Vars
     module Defaults
       BRANCH      = "master".freeze
       ENV_NAME    = "development".freeze
+      REMOTE_NAME = "origin".freeze
       SOURCE_PATH = "config/vars.yml".freeze
       SOURCE_TYPE = :path
     end
 
     module EnvKeys
-      BRANCH   = "TARGET_BRANCH".freeze
-      ENV_NAME = "APP_ENV".freeze
+      BRANCH      = "TARGET_BRANCH".freeze
+      ENV_NAME    = "APP_ENV".freeze
+      REMOTE_NAME = "REMOTE_NAME".freeze
     end
 
     def initialize(opts = {})
@@ -56,6 +58,10 @@ class Vars
       end
     end
 
+    def remote_name
+      ENV.fetch(EnvKeys::REMOTE_NAME, Defaults::REMOTE_NAME)
+    end
+
     def source_type
       opts.fetch(:source_type, Defaults::SOURCE_TYPE)
     end
@@ -75,7 +81,7 @@ class Vars
         when :path
           File.read(path)
         when :git
-          Dir.chdir(repo_path) { capture("git show #{branch}:#{path}") }
+          Dir.chdir(repo_path) { capture("git show #{remote_name}/#{branch}:#{path}") }
         else
           raise "unknown source_type: #{source_type}"
         end
