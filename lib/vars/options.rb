@@ -18,6 +18,8 @@ class Vars
 
     def initialize(opts = {})
       @opts = opts.transform_keys(&:to_sym)
+      # Use only when source_type is git.
+      @need_fetch = true
     end
 
     def hash(reload = false)
@@ -27,6 +29,8 @@ class Vars
 
     def load_source
       src = YAML.safe_load(ERB.new(raw_source, nil, "-").result(Class.new.__binding__), [], [], true)
+      return {} if src.nil?
+
       src.fetch("default", {}).merge(src.fetch(name.to_s))
     end
 
@@ -68,6 +72,12 @@ class Vars
 
     def in_repository?
       opts[:in_repository] = success?("git rev-parse --git-dir") unless opts.key?(:in_repository)
+      # Update remote repositories.
+      if opts[:in_repository] && @need_fetch
+        execute("git fetch #{remote_name}")
+        @need_fetch = false
+      end
+
       opts.fetch(:in_repository)
     end
 

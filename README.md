@@ -1,5 +1,7 @@
 # Vars
 
+[![Build Status](https://travis-ci.org/i2bskn/vars.svg?branch=master)](https://travis-ci.org/i2bskn/vars)
+
 `vars` is provide configuration each environments.
 
 ## Installation
@@ -23,7 +25,10 @@ vars = Vars.new(path: "path/to/environment.yml", name: "production")
 vars.rails_env # => "production"
 vars.app_root  # => "/var/www/app/current"
 
-vars.resolve_template("path/to/template.erb", "path/to/dest_file") # Create file from template.
+# Create config/database.yml from template.
+vars.resolve_template("config/deploy/templates/database.yml.erb", "config/database.yml")
+
+# Create config files from templates. (config/deploy/templates/**/*)
 vars.resolve_templates("config/deploy/templates", "config")
 ```
 
@@ -35,9 +40,16 @@ default:
   app_root: /var/www/app/current
   db_host: localhost
 
+development:
+  db_host: app-development-db-01.xxx.ap-northeast-1.rds.amazonaws.com
+
+staging:
+  rails_env: staging
+  db_host: app-staging-db-01.xxx.ap-northeast-1.rds.amazonaws.com
+
 production:
   rails_env: production
-  db_host: app-db-01.cluster.ap-northeast-1.rds.amazonaws.com
+  db_host: app-db-01.xxx.ap-northeast-1.rds.amazonaws.com
 ```
 
 ## Development

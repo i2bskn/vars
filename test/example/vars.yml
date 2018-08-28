@@ -1,0 +1,15 @@
+default:
+  rails_env: development
+  app_root: /var/www/app/current
+  db_host: localhost
+
+development:
+  db_host: app-development-db-01.xxx.ap-northeast-1.rds.amazonaws.com
+
+staging:
+  rails_env: staging
+  db_host: app-staging-db-01.xxx.ap-northeast-1.rds.amazonaws.com
+
+production:
+  rails_env: production
+  db_host: app-db-01.xxx.ap-northeast-1.rds.amazonaws.com
