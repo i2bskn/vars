@@ -94,6 +94,9 @@ class Vars
 
       def capture(cmd)
         execute(cmd).first.chomp
+        out, error, status = execute(cmd)
+        raise error unless status.exitstatus.zero?
+        out.chomp
       end
 
       def success?(cmd)
