@@ -96,6 +96,7 @@ class Vars
         execute(cmd).first.chomp
         out, error, status = execute(cmd)
         raise error unless status.exitstatus.zero?
+
         out.chomp
       end
 
